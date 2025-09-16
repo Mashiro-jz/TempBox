@@ -20,6 +20,10 @@ intl: ^0.18.1: Date/time formatting and internationalization utilities
 
 go_router: Moving on app
 
+freezed_annotation: Generating model files with fromJson etc.
+
+build_runner: Generate files tagged as @freezed
+
 
 ## Structure
 
