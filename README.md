@@ -28,10 +28,11 @@ lib/
 │   │   ├── app_constants.dart
 │   │   └── ... 
 │   ├── errors/             # Obsługa błędów (exceptions, failures)
-│   ├── services/           # Globalne serwisy (np. powiadomienia)
+│   ├── services/           # Globalne serwisy (np. powiadomienia) (SOON)
 │   │   └── notification_service.dart
 │   ├── theme/              # Motywy jasny/ciemny
 │   │   ├── app_theme.dart
+│   │   ├── theme_repository.dart
 │   │   └── app_palette.dart
 │   ├── utils/              # Narzędzia (formatters, extensions)
 │   │   ├── date_formatter.dart
