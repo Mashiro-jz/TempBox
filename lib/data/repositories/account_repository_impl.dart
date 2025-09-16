@@ -78,4 +78,39 @@ class AccountRepositoryImpl implements AccountRepository {
     // TODO: implement updateAccount
     throw UnimplementedError();
   }
+
+  // Pobierz wszystkie wiadomości jako Stream
+  Future<Stream<List<Message>>> getMessages() async {
+    if (_currentUser == null) throw Exception("User not authenticated");
+
+    return _currentUser!.allMessages();
+  }
+
+  // Pobierz pojedynczą wiadomość po ID
+  Future<Message> getMessageById(String id) async {
+    if (_currentUser == null) throw Exception("User not authenticated");
+
+    return await _currentUser!.messageFrom(id);
+  }
+
+  // Usuń wiadomość po ID
+  Future<void> deleteMessage(String id) async {
+    if (_currentUser == null) throw Exception("User not authenticated");
+
+    await _currentUser!.deleteMessage(id);
+  }
+
+  // Oznacz wiadomość jako przeczytaną
+  Future<void> markMessageAsRead(String id) async {
+    if (_currentUser == null) throw Exception("User not authenticated");
+
+    await _currentUser!.readMessage(id);
+  }
+
+  // Oznacz wiadomość jako nieprzeczytaną
+  Future<void> markMessageAsUnread(String id) async {
+    if (_currentUser == null) throw Exception("User not authenticated");
+
+    await _currentUser!.unreadMessage(id);
+  }
 }
