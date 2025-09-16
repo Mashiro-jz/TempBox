@@ -18,6 +18,8 @@ cached_network_image: ^3.3.0: Efficient image loading and caching for email atta
 
 intl: ^0.18.1: Date/time formatting and internationalization utilities
 
+go_router: Moving on app
+
 
 ## Structure
 
@@ -78,7 +80,8 @@ lib/
     │   ├── mailbox_page.dart
     │   ├── message_detail_page.dart
     │   ├── settings_page.dart
-    │   └── ...
+    │   ├── auth_page.dart
+    │   └── register_page.dart
     ├── providers/          # Stan zarządzany (Riverpod)
     │   ├── account_provider.dart
     │   ├── message_list_provider.dart

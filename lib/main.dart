@@ -14,7 +14,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Pobieramy aktualny ThemeMode z ThemeController
+    // Pobieramy aktualny ThemeMode z ThemeController (tutaj mamy wywołanie także instancji SharedPreferences)
     final themeMode = ref.watch(themeControllerProvider);
 
     return MaterialApp.router(
