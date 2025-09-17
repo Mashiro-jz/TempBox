@@ -6,7 +6,6 @@ import '../../domain/entities/account_entity.dart';
 import '../../domain/repositories/account_repository.dart';
 import '../../data/repositories/account_repository_impl.dart';
 import '../../data/datasources/account/account_remote_data_source.dart';
-import '../../data/datasources/message/message_remote_data_source.dart';
 
 final keyValueStorageProvider = Provider<KeyValueStorage>(
   (ref) => SharedPrefsStorage(),
@@ -16,7 +15,6 @@ final accountRepositoryProvider = Provider<AccountRepository>((ref) {
   final storage = ref.watch(keyValueStorageProvider);
   return AccountRepositoryImpl(
     accountRemoteDataSource: AccountRemoteDataSource(),
-    messageRemoteDataSource: MessageRemoteDataSource(),
     storage: storage,
   );
 });
