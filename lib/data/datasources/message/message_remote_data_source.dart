@@ -2,12 +2,12 @@
 import 'package:mailtm_client/mailtm_client.dart';
 
 class MessageRemoteDataSource {
-  Future<Stream<List<Message>>> getMessages(AuthenticatedUser user) async {
+  Stream<List<Message>> getMessages(AuthenticatedUser user) {
     return user.allMessages();
   }
 
-  Future<Message> getMessageById(AuthenticatedUser user, String id) async {
-    return await user.messageFrom(id);
+  Future<Message> getMessageById(AuthenticatedUser user, String id) {
+    return user.messageFrom(id);
   }
 
   Future<void> deleteMessage(AuthenticatedUser user, String id) async {

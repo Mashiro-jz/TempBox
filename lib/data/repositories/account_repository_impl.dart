@@ -2,13 +2,11 @@
 import '../../domain/entities/account_entity.dart';
 import '../../domain/repositories/account_repository.dart';
 import '../datasources/account/account_remote_data_source.dart';
-import '../datasources/message/message_remote_data_source.dart';
 import '../../core/storage/key_value_storage.dart';
 import 'package:mailtm_client/mailtm_client.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
   final AccountRemoteDataSource accountRemoteDataSource;
-  final MessageRemoteDataSource messageRemoteDataSource;
   final KeyValueStorage storage;
 
   static const _tokenKey = "mailtm_token";
@@ -16,7 +14,6 @@ class AccountRepositoryImpl implements AccountRepository {
 
   AccountRepositoryImpl({
     required this.accountRemoteDataSource,
-    required this.messageRemoteDataSource,
     required this.storage,
   });
 
