@@ -95,6 +95,9 @@ lib/
     │   ├── message_tile.dart
     │   ├── attachment_gallery.dart
     │   └── ...
-    └── routing/            # Nawigacja
-        └── app_router.dart
+    routing/
+    ├── account_routes.dart
+    ├── message_routes.dart
+    ├── settings_routes.dart
+    └── app_router.dart
 

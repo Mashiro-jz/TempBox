@@ -1,5 +1,4 @@
-// lib\data\models\account_model.dart
-
+// lib/data/models/account_model.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/account_entity.dart';
 
@@ -15,16 +14,15 @@ abstract class AccountModel with _$AccountModel {
     required int used,
     required bool isDisabled,
     required bool isDeleted,
+    String? token,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _AccountModel;
 
-  // Mapowanie z JSON na Model
   factory AccountModel.fromJson(Map<String, dynamic> json) =>
       _$AccountModelFromJson(json);
 }
 
-// Rozszerzenie do konwersji na encję
 extension AccountModelX on AccountModel {
   AccountEntity toEntity() {
     return AccountEntity(
@@ -34,6 +32,7 @@ extension AccountModelX on AccountModel {
       used: used,
       isDisabled: isDisabled,
       isDeleted: isDeleted,
+      token: token,
     );
   }
 }

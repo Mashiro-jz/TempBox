@@ -1,20 +1,23 @@
 // lib/data/repositories/account_repository_impl.dart
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/account_entity.dart';
 import '../../domain/repositories/account_repository.dart';
 import '../datasources/account/account_remote_data_source.dart';
-import '../../data/datasources/message/message_remote_data_source.dart';
+import '../datasources/message/message_remote_data_source.dart';
+import '../../core/storage/key_value_storage.dart';
 import 'package:mailtm_client/mailtm_client.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
   final AccountRemoteDataSource accountRemoteDataSource;
   final MessageRemoteDataSource messageRemoteDataSource;
+  final KeyValueStorage storage;
+
   static const _tokenKey = "mailtm_token";
   AuthenticatedUser? _currentUser;
 
   AccountRepositoryImpl({
     required this.accountRemoteDataSource,
     required this.messageRemoteDataSource,
+    required this.storage,
   });
 
   AccountEntity _mapToEntity(AuthenticatedUser user) {
@@ -25,18 +28,14 @@ class AccountRepositoryImpl implements AccountRepository {
       used: user.account.used,
       isDisabled: user.account.isDisabled,
       isDeleted: user.account.isDeleted,
+      token: user.token,
     );
   }
 
-  Future<void> _saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, token);
-  }
+  Future<void> _saveToken(String token) async =>
+      await storage.write(_tokenKey, token);
 
-  Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_tokenKey);
-  }
+  Future<String?> getToken() async => storage.read(_tokenKey);
 
   @override
   Future<AccountEntity> createAccount({
@@ -48,10 +47,8 @@ class AccountRepositoryImpl implements AccountRepository {
       username: username,
       password: password,
     );
-
     _currentUser = user;
     await _saveToken(user.token);
-
     return _mapToEntity(user);
   }
 
@@ -64,59 +61,36 @@ class AccountRepositoryImpl implements AccountRepository {
       address: username!,
       password: password,
     );
-
     _currentUser = user;
     await _saveToken(user!.token);
-
     return _mapToEntity(user);
-  }
-
-  @override
-  Future<List<Domain>> getAvailableDomains() async {
-    return await accountRemoteDataSource.getDomains();
   }
 
   @override
   Future<void> deleteAccount(String id) async {
     if (_currentUser == null) throw Exception("User not authenticated");
-
     await _currentUser!.delete();
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
-
+    await storage.delete(_tokenKey);
     _currentUser = null;
   }
 
   @override
+  Future<String> getTokenFromUserId(String id) async {
+    if (_currentUser != null && _currentUser!.account.id == id) {
+      return _currentUser!.token;
+    }
+    final token = await storage.read(_tokenKey);
+    if (token != null) return token;
+    throw Exception("Token for user $id not found.");
+  }
+
+  @override
   Future<AccountEntity> updateAccount(AccountEntity account) {
-    // TODO: MailTM API nie wspiera update, więc zostawiamy na później
     throw UnimplementedError();
   }
 
-  // Wiadomości
-  Future<Stream<List<Message>>> getMessages() async {
-    if (_currentUser == null) throw Exception("User not authenticated");
-    return messageRemoteDataSource.getMessages(_currentUser!);
-  }
-
-  Future<Message> getMessageById(String id) async {
-    if (_currentUser == null) throw Exception("User not authenticated");
-    return messageRemoteDataSource.getMessageById(_currentUser!, id);
-  }
-
-  Future<void> deleteMessage(String id) async {
-    if (_currentUser == null) throw Exception("User not authenticated");
-    await messageRemoteDataSource.deleteMessage(_currentUser!, id);
-  }
-
-  Future<void> markMessageAsRead(String id) async {
-    if (_currentUser == null) throw Exception("User not authenticated");
-    await messageRemoteDataSource.markMessageAsRead(_currentUser!, id);
-  }
-
-  Future<void> markMessageAsUnread(String id) async {
-    if (_currentUser == null) throw Exception("User not authenticated");
-    await messageRemoteDataSource.markMessageAsUnread(_currentUser!, id);
+  @override
+  Future<List<Domain>> getAvailableDomains() async {
+    return await accountRemoteDataSource.getDomains();
   }
 }

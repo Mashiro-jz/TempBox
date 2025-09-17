@@ -1,7 +1,6 @@
 // lib\domain\repositories\account_repository.dart
 
 import 'package:mailtm_client/mailtm_client.dart';
-
 import '../entities/account_entity.dart';
 
 abstract class AccountRepository {
@@ -20,4 +19,6 @@ abstract class AccountRepository {
   Future<AccountEntity> updateAccount(AccountEntity account);
 
   Future<void> deleteAccount(String id);
+
+  Future<String> getTokenFromUserId(String id);
 }

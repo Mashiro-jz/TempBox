@@ -14,6 +14,7 @@ _AccountModel _$AccountModelFromJson(Map<String, dynamic> json) =>
       used: (json['used'] as num).toInt(),
       isDisabled: json['isDisabled'] as bool,
       isDeleted: json['isDeleted'] as bool,
+      token: json['token'] as String?,
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
@@ -30,6 +31,7 @@ Map<String, dynamic> _$AccountModelToJson(_AccountModel instance) =>
       'used': instance.used,
       'isDisabled': instance.isDisabled,
       'isDeleted': instance.isDeleted,
+      'token': instance.token,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
     };
