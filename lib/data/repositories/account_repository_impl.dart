@@ -2,15 +2,20 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../domain/entities/account_entity.dart';
 import '../../domain/repositories/account_repository.dart';
-import '../datasources/remote/mailtm_remote_data_source.dart';
+import '../datasources/account/account_remote_data_source.dart';
+import '../../data/datasources/message/message_remote_data_source.dart';
 import 'package:mailtm_client/mailtm_client.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
-  final MailTmRemoteDataSource remoteDataSource;
+  final AccountRemoteDataSource accountRemoteDataSource;
+  final MessageRemoteDataSource messageRemoteDataSource;
   static const _tokenKey = "mailtm_token";
   AuthenticatedUser? _currentUser;
 
-  AccountRepositoryImpl({required this.remoteDataSource});
+  AccountRepositoryImpl({
+    required this.accountRemoteDataSource,
+    required this.messageRemoteDataSource,
+  });
 
   AccountEntity _mapToEntity(AuthenticatedUser user) {
     return AccountEntity(
@@ -39,7 +44,7 @@ class AccountRepositoryImpl implements AccountRepository {
     String? username,
     String? domain,
   }) async {
-    final user = await remoteDataSource.createAccount(
+    final user = await accountRemoteDataSource.createAccount(
       username: username,
       password: password,
     );
@@ -55,7 +60,7 @@ class AccountRepositoryImpl implements AccountRepository {
     String? username,
     required String password,
   }) async {
-    final user = await remoteDataSource.login(
+    final user = await accountRemoteDataSource.login(
       address: username!,
       password: password,
     );
@@ -68,7 +73,7 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @override
   Future<List<Domain>> getAvailableDomains() async {
-    return await remoteDataSource.getDomains();
+    return await accountRemoteDataSource.getDomains();
   }
 
   @override
@@ -92,26 +97,26 @@ class AccountRepositoryImpl implements AccountRepository {
   // Wiadomości
   Future<Stream<List<Message>>> getMessages() async {
     if (_currentUser == null) throw Exception("User not authenticated");
-    return remoteDataSource.getMessages(_currentUser!);
+    return messageRemoteDataSource.getMessages(_currentUser!);
   }
 
   Future<Message> getMessageById(String id) async {
     if (_currentUser == null) throw Exception("User not authenticated");
-    return remoteDataSource.getMessageById(_currentUser!, id);
+    return messageRemoteDataSource.getMessageById(_currentUser!, id);
   }
 
   Future<void> deleteMessage(String id) async {
     if (_currentUser == null) throw Exception("User not authenticated");
-    await remoteDataSource.deleteMessage(_currentUser!, id);
+    await messageRemoteDataSource.deleteMessage(_currentUser!, id);
   }
 
   Future<void> markMessageAsRead(String id) async {
     if (_currentUser == null) throw Exception("User not authenticated");
-    await remoteDataSource.markMessageAsRead(_currentUser!, id);
+    await messageRemoteDataSource.markMessageAsRead(_currentUser!, id);
   }
 
   Future<void> markMessageAsUnread(String id) async {
     if (_currentUser == null) throw Exception("User not authenticated");
-    await remoteDataSource.markMessageAsUnread(_currentUser!, id);
+    await messageRemoteDataSource.markMessageAsUnread(_currentUser!, id);
   }
 }
