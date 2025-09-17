@@ -14,7 +14,6 @@ abstract class AccountModel with _$AccountModel {
     required int used,
     required bool isDisabled,
     required bool isDeleted,
-    String? token,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _AccountModel;
@@ -32,7 +31,6 @@ extension AccountModelX on AccountModel {
       used: used,
       isDisabled: isDisabled,
       isDeleted: isDeleted,
-      token: token,
     );
   }
 }
