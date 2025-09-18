@@ -68,7 +68,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           ),
         );
 
-        // Przekierowanie do mailbox — teraz GoRouter zareaguje na zmianę authProvider
         context.go(RouteNames.mailBox);
       }
     } catch (e) {

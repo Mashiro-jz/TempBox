@@ -87,7 +87,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mail Client Login"),
+        title: const Row(
+          children: [
+            Text("TempBox", style: TextStyle(fontSize: 30)),
+            SizedBox(width: 16),
+            Icon(Icons.mail, size: 30),
+          ],
+        ),
         leading: BackButton(onPressed: () => context.go(RouteNames.auth)),
       ),
       body: SafeArea(
@@ -99,7 +105,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               const Spacer(),
 
               Text(
-                "Mail Client",
+                "Tempbox",
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,
@@ -124,7 +130,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     horizontal: 16,
                     vertical: 14,
                   ),
-                  errorText: _nameError, // pokazujemy walidację
+                  errorText: _nameError,
                 ),
               ),
               const SizedBox(height: 16),
@@ -142,7 +148,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     horizontal: 16,
                     vertical: 14,
                   ),
-                  errorText: _passwordError, // pokazujemy walidację
+                  errorText: _passwordError,
                 ),
               ),
               const SizedBox(height: 24),
