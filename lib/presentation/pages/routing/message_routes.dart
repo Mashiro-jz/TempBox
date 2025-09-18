@@ -9,14 +9,13 @@ class MessageRoutes {
     GoRoute(
       path: RouteNames.mailBox,
       name: "home",
-      builder: (context, state) => const MailBoxPage(),
+      builder: (context, state) => const MailboxPage(),
     ),
     GoRoute(
       path: "${RouteNames.messageDetail}/:id",
-      name: "details",
+      name: "messageDetails",
       builder: (context, state) {
-        final id = int.parse(state.pathParameters["id"]!);
-        return MessageDetailPage(placeId: id);
+        return MessageDetailPage(messageId: state.pathParameters["id"]!);
       },
     ),
   ];

@@ -17,10 +17,14 @@ class AccountRepositoryImpl implements AccountRepository {
     required this.storage,
   });
 
+  @override
+  AuthenticatedUser? get currentUser => _currentUser;
+
   AccountEntity _mapToEntity(AuthenticatedUser user) {
     return AccountEntity(
       id: user.account.id,
       address: user.account.address,
+      password: user.password,
       quota: user.account.quota,
       used: user.account.used,
       isDisabled: user.account.isDisabled,
@@ -37,12 +41,16 @@ class AccountRepositoryImpl implements AccountRepository {
   @override
   Future<AccountEntity> createAccount({
     required String password,
-    String? username,
-    String? domain,
+    required String username,
+    required String domain,
   }) async {
+    final domains = await accountRemoteDataSource.getDomains();
+    final domainObj = domains.firstWhere((d) => d.domain == domain);
+
     final user = await accountRemoteDataSource.createAccount(
       username: username,
       password: password,
+      domain: domainObj,
     );
     _currentUser = user;
     await _saveToken(user.token);
@@ -51,15 +59,20 @@ class AccountRepositoryImpl implements AccountRepository {
 
   @override
   Future<AccountEntity> login({
-    String? username,
+    required String address,
     required String password,
   }) async {
     final user = await accountRemoteDataSource.login(
-      address: username!,
+      address: address,
       password: password,
     );
+
+    if (user == null) {
+      throw Exception("Login failed: Invalid credentials");
+    }
+
     _currentUser = user;
-    await _saveToken(user!.token);
+    await _saveToken(user.token);
     return _mapToEntity(user);
   }
 

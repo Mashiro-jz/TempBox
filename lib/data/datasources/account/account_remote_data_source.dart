@@ -10,10 +10,15 @@ class AccountRemoteDataSource {
   }
 
   Future<AuthenticatedUser> createAccount({
-    String? username,
+    required String username,
     required String password,
+    required Domain domain,
   }) async {
-    return await MailTm.register(username: username, password: password);
+    return await MailTm.register(
+      username: username,
+      password: password,
+      domain: domain,
+    );
   }
 
   Future<List<Domain>> getDomains() async {

@@ -1,4 +1,5 @@
 // lib/data/models/account_model.dart
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/account_entity.dart';
 
@@ -10,12 +11,13 @@ abstract class AccountModel with _$AccountModel {
   const factory AccountModel({
     required String id,
     required String address,
+    required String password,
     required int quota,
     required int used,
     required bool isDisabled,
     required bool isDeleted,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = _AccountModel;
 
   factory AccountModel.fromJson(Map<String, dynamic> json) =>
@@ -27,6 +29,7 @@ extension AccountModelX on AccountModel {
     return AccountEntity(
       id: id,
       address: address,
+      password: password,
       quota: quota,
       used: used,
       isDisabled: isDisabled,

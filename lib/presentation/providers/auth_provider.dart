@@ -1,4 +1,5 @@
 // lib/presentation/providers/auth_provider.dart
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import '../../core/storage/key_value_storage.dart';
@@ -44,14 +45,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> register({
     required String password,
-    String? username,
-    String? domain,
+    required String username,
+    required String domain,
   }) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final account = await _repository.createAccount(
-        password: password,
         username: username,
+        password: password,
         domain: domain,
       );
       if (account.token != null) {
@@ -63,18 +64,30 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> login({required String password, String? username}) async {
+  Future<void> login({
+    required String password,
+    required String address,
+  }) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
+      if (kDebugMode) {
+        print("Attempting login with: $address");
+      }
       final account = await _repository.login(
+        address: address,
         password: password,
-        username: username,
       );
+      if (kDebugMode) {
+        print("Login successful: ${account.address}");
+      }
       if (account.token != null) {
         await _storage.write(_tokenKey, account.token!);
       }
       state = state.copyWith(isLoading: false, user: account);
     } catch (e) {
+      if (kDebugMode) {
+        print("Login error: $e");
+      }
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }

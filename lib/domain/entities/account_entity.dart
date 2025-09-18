@@ -2,6 +2,7 @@
 class AccountEntity {
   final String id;
   final String address;
+  final String password;
   final int quota;
   final int used;
   final bool isDisabled;
@@ -11,6 +12,7 @@ class AccountEntity {
   AccountEntity({
     required this.id,
     required this.address,
+    required this.password,
     required this.quota,
     required this.used,
     required this.isDisabled,

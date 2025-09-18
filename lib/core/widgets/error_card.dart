@@ -1,21 +1,19 @@
-// lib/core/widgets/error_view.dart
+// lib/core/widgets/error_card.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../theme/app_palette.dart';
 import '../../presentation/providers/theme_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ErrorView extends ConsumerWidget {
+class ErrorCard extends ConsumerWidget {
   final String message;
   final VoidCallback onRetry;
 
-  const ErrorView({super.key, required this.message, required this.onRetry});
+  const ErrorCard({super.key, required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Pobieramy aktualny ThemeMode
     final themeMode = ref.watch(themeControllerProvider);
 
-    // Wybieramy odpowiednie kolory w zależności od motywu
     final background = themeMode == ThemeMode.dark
         ? AppPalette.dark.surface
         : AppPalette.light.surface;
@@ -23,42 +21,43 @@ class ErrorView extends ConsumerWidget {
         ? AppPalette.dark.onSurface
         : AppPalette.light.onSurface;
     final buttonColor = AppPalette.primary.main;
-    final errorColor = AppPalette.semantic.error;
 
-    return Scaffold(
-      backgroundColor: background,
-      body: Center(
+    return Center(
+      child: Card(
+        color: background,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.symmetric(horizontal: 32),
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.error_outline, color: errorColor, size: 48.0),
-              const SizedBox(height: 16.0),
+              Icon(
+                Icons.error_outline,
+                color: AppPalette.semantic.error,
+                size: 40,
+              ),
+              const SizedBox(height: 12),
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: TextStyle(color: textColor, fontSize: 16),
               ),
-              const SizedBox(height: 24.0),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: onRetry,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: buttonColor,
                   foregroundColor: AppPalette.light.surface,
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 32.0,
-                    vertical: 12.0,
+                    horizontal: 24,
+                    vertical: 10,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text("Retry"),
+                child: const Text("Spróbuj ponownie"),
               ),
             ],
           ),

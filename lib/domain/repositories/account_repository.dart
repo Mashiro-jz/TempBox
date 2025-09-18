@@ -4,13 +4,18 @@ import 'package:mailtm_client/mailtm_client.dart';
 import '../entities/account_entity.dart';
 
 abstract class AccountRepository {
+  AuthenticatedUser? get currentUser;
+
   Future<AccountEntity> createAccount({
+    required String username,
     required String password,
-    String? username,
-    String? domain,
+    required String domain,
   });
 
-  Future<AccountEntity> login({String? username, required String password});
+  Future<AccountEntity> login({
+    required String address,
+    required String password,
+  });
 
   Future<List<Domain>> getAvailableDomains() async {
     return await MailTm.domains();

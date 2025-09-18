@@ -1,8 +1,7 @@
-// lib\presentation\pages\routing\app_router.dart
+// lib/presentation/pages/routing/app_router.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/widgets/error_view.dart';
 import 'account_routes.dart';
 import 'message_routes.dart';
 import 'settings_routes.dart';
@@ -48,11 +47,24 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         RouteNames.register,
       ];
 
-      final isAuthPath = authPaths.contains(state.matchedLocation);
+      final currentLocation = state.uri.path;
 
-      if (isAuthenticated && isAuthPath) return RouteNames.mailBox;
-      if (!isAuthenticated && !isAuthPath) return RouteNames.auth;
+      // Sprawdzenie, czy aktualna strona to strona logowania/rejestracji
+      final isAuthPath = authPaths.any(
+        (path) => currentLocation.startsWith(path),
+      );
 
+      if (isAuthenticated && isAuthPath) {
+        // Użytkownik jest zalogowany, a znajduje się na stronie auth -> przekieruj do mailbox
+        return RouteNames.mailBox;
+      }
+
+      if (!isAuthenticated && !isAuthPath) {
+        // Użytkownik nie jest zalogowany, a próbuje wejść na stronę chronioną -> przekieruj do auth
+        return RouteNames.auth;
+      }
+
+      // Brak potrzeby przekierowania
       return null;
     },
     routes: [
@@ -60,11 +72,5 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ...MessageRoutes.routes,
       ...SettingsRoutes.routes,
     ],
-    errorBuilder: (context, state) => Scaffold(
-      body: ErrorView(
-        message: state.error.toString(),
-        onRetry: () => GoRouter.of(context).go(RouteNames.auth),
-      ),
-    ),
   );
 });
