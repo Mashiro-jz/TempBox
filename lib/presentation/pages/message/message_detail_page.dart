@@ -108,12 +108,10 @@ class MessageDetailPage extends ConsumerWidget {
           final fromName = message.from.values.isNotEmpty
               ? message.from.values.first
               : "Nieznany nadawca";
-          final sentTime = DateFormatter(
-            message.createdAt,
-          ).formattedDate(message.createdAt);
-          final retentionDate = DateFormatter(
+          final sentTime = DateFormatter().formattedDate(message.createdAt);
+          final retentionDate = DateFormatter().formattedDate(
             message.retentionDate,
-          ).formattedDate(message.retentionDate);
+          );
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),

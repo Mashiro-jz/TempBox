@@ -1,5 +1,6 @@
 // lib\presentation\pages\settings\settings_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:temp_box/core/widgets/app_drawer.dart';
@@ -45,10 +46,28 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 "Adres e-mail",
                 style: Theme.of(context).textTheme.labelLarge,
               ),
-              const SizedBox(height: 8),
-              Text(
-                account.account.address,
-                style: const TextStyle(fontSize: 16),
+              GestureDetector(
+                onTap: () async {
+                  await Clipboard.setData(
+                    ClipboardData(text: account.account.address),
+                  ).then((_) {
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Adres email skopiowano do schowka"),
+                      ),
+                    );
+                  });
+                },
+                child: Column(
+                  children: [
+                    const SizedBox(height: 8),
+                    Text(
+                      account.account.address,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 8),
               Column(
