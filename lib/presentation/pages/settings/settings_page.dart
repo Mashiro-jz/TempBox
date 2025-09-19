@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:temp_box/core/widgets/app_drawer.dart';
 import 'package:temp_box/core/widgets/theme_toggle_button.dart';
+import 'package:temp_box/presentation/providers/message_repository_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../routing/app_router.dart';
 
@@ -147,6 +148,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     try {
       final account = ref.read(accountRepositoryProvider).currentUser!;
       await accountRepo.deleteAccount(account.account.id);
+      // Potrzebne, aby provider się odświeżył i zrozumiał, że użytkownik nie jest już zalogowany
+      ref.read(authProvider.notifier).logout().then((_) {
+        ScaffoldMessenger.of(
+          // ignore: use_build_context_synchronously
+          context,
+        ).showSnackBar(SnackBar(content: Text("Usuwanie konta zakończone.")));
+      });
+      // wyczyszczenie messageRepo
+      ref.invalidate(messageRepositoryProvider);
       if (!mounted) return;
       context.go(RouteNames.auth);
     } catch (e) {

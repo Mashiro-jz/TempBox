@@ -63,20 +63,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     setState(() => _isLoading = true);
 
-    try {
-      // Wywołanie przez authProvider, nie bezpośrednio repozytorium
-      await ref
-          .read(authProvider.notifier)
-          .login(address: address, password: password);
+    // Wywołanie logowania przez authProvider
+    await ref
+        .read(authProvider.notifier)
+        .login(address: address, password: password);
 
-      // Teraz authProvider.user != null -> GoRouterNotifier zareaguje
-    } catch (e) {
+    // Po logowaniu sprawdzamy stan
+    final authState = ref.read(authProvider);
+
+    if (authState.error != null && mounted) {
+      final errorString = authState.error!;
+      String userMessage;
+
+      if (errorString.contains("Invalid credentials")) {
+        userMessage = "Nieprawidłowy adres email lub hasło.";
+      } else {
+        userMessage = "Logowanie nie powiodło się. Spróbuj ponownie później.";
+      }
+
       setState(() {
-        _errorMessage = "Logowanie nie powiodło się: $e";
+        _errorMessage = userMessage; // pokażemy też w ErrorCard
       });
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
     }
+
+    if (mounted) setState(() => _isLoading = false);
   }
 
   @override
@@ -122,7 +132,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               TextField(
                 controller: _addressController,
                 decoration: InputDecoration(
-                  hintText: "Nazwa konta",
+                  hintText: "Adres email",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
