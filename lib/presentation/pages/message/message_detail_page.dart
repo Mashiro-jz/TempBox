@@ -10,6 +10,7 @@ import 'package:temp_box/domain/entities/message_entity.dart';
 import 'package:temp_box/presentation/pages/routing/app_router.dart';
 import 'package:temp_box/presentation/providers/message_repository_provider.dart';
 import 'package:temp_box/presentation/providers/theme_provider.dart';
+import '../../../core/utils/date_formatter.dart';
 
 class MessageDetailPage extends ConsumerWidget {
   final String messageId;
@@ -107,6 +108,12 @@ class MessageDetailPage extends ConsumerWidget {
           final fromName = message.from.values.isNotEmpty
               ? message.from.values.first
               : "Nieznany nadawca";
+          final sentTime = DateFormatter(
+            message.createdAt,
+          ).formattedDate(message.createdAt);
+          final retentionDate = DateFormatter(
+            message.retentionDate,
+          ).formattedDate(message.retentionDate);
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
@@ -183,14 +190,31 @@ class MessageDetailPage extends ConsumerWidget {
                       ),
                       if (message.hasAttachments) ...[
                         const SizedBox(height: 20),
-                        Row(
-                          children: const [
-                            Icon(Icons.attachment),
-                            SizedBox(width: 8),
-                            Text("Wiadomość zawiera załączniki"),
-                          ],
+                        Tooltip(
+                          message: "Naciśnij, aby wyświetlić",
+                          child: Row(
+                            children: const [
+                              Icon(Icons.attachment),
+                              SizedBox(width: 8),
+                              Text("Wiadomość zawiera załączniki"),
+                            ],
+                          ),
                         ),
                       ],
+                      // Data otrzymania
+                      const SizedBox(height: 10),
+                      Text("Wysłano: $sentTime"),
+
+                      // Data przechowywania wiadomości
+                      Tooltip(
+                        message: "Po tym czasie, wiadomość zostanie usunięta",
+                        child: Row(
+                          children: [
+                            const SizedBox(height: 10),
+                            Text("Przechowywanie do: $retentionDate"),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
