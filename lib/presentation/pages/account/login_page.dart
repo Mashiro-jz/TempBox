@@ -179,14 +179,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               const SizedBox(height: 16),
 
+              const ThemeToggleButton(),
+
               // Błędy z repozytorium / serwera
               if (_errorMessage != null)
                 ErrorCard(
                   message: _errorMessage!,
                   onRetry: () => setState(() => _errorMessage = null),
                 ),
-
-              const ThemeToggleButton(),
 
               const Spacer(),
             ],
