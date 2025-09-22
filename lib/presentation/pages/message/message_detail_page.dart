@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:temp_box/core/theme/app_palette.dart';
 import 'package:temp_box/core/widgets/app_drawer.dart';
@@ -14,6 +15,7 @@ import 'package:temp_box/domain/entities/message_entity.dart';
 import 'package:temp_box/presentation/pages/routing/app_router.dart';
 import 'package:temp_box/presentation/providers/message_repository_provider.dart';
 import 'package:temp_box/presentation/providers/theme_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/utils/date_formatter.dart';
 
 class MessageDetailPage extends ConsumerWidget {
@@ -180,16 +182,37 @@ class MessageDetailPage extends ConsumerWidget {
                         ],
                       ),
                       const Divider(height: 32, thickness: 1.2),
-                      Text(
-                        message.text.isNotEmpty
-                            ? message.text
-                            : "(Brak treści)",
-                        style: TextStyle(
-                          fontSize: 16,
-                          height: 1.5,
-                          color: primaryTextColor,
+                      // TODO: Zrobić obsługę linków
+                      if (message.html.isNotEmpty) ...[
+                        ...message.html.map<Widget>(
+                          (htmlPart) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: HtmlWidget(
+                              htmlPart,
+                              textStyle: Theme.of(context).textTheme.bodyMedium,
+                              onTapUrl: (url) async {
+                                // Otwieranie URL w przeglądarce
+                                if (await canLaunchUrl(Uri.parse(url))) {
+                                  await launchUrl(
+                                    Uri.parse(url),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                } else {
+                                  // ignore: use_build_context_synchronously
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Nie można otworzyć linku: $url',
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return true; // Zwracam true, aby wskazać, że link został obsłużony
+                              },
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                       if (message.hasAttachments) ...[
                         const SizedBox(height: 20),
                         Tooltip(
