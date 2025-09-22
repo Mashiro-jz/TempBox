@@ -182,7 +182,6 @@ class MessageDetailPage extends ConsumerWidget {
                         ],
                       ),
                       const Divider(height: 32, thickness: 1.2),
-                      // TODO: Zrobić obsługę linków
                       if (message.html.isNotEmpty) ...[
                         ...message.html.map<Widget>(
                           (htmlPart) => Padding(
