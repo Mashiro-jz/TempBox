@@ -63,4 +63,16 @@ class MessageRepositoryImpl implements MessageRepository {
       return false;
     }
   }
+
+  Future<List<int>> downloadAttachment(String url) async {
+    try {
+      final bytes = await messageRemoteDataSource.downloadAttachment(
+        currentUser,
+        url,
+      );
+      return bytes;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

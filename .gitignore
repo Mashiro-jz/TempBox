@@ -75,3 +75,6 @@ app.*.map.json
 
 # Files
 *.env
+
+# Photos
+*.png

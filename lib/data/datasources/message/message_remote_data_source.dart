@@ -21,4 +21,11 @@ class MessageRemoteDataSource {
   Future<void> markMessageAsUnread(AuthenticatedUser user, String id) async {
     await user.unreadMessage(id);
   }
+
+  Future<List<int>> downloadAttachment(
+    AuthenticatedUser user,
+    String url,
+  ) async {
+    return await user.downloadAttachment(url);
+  }
 }

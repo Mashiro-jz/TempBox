@@ -1,7 +1,11 @@
 // lib/presentation/pages/message_detail_page.dart
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:temp_box/core/theme/app_palette.dart';
 import 'package:temp_box/core/widgets/app_drawer.dart';
 import 'package:temp_box/core/widgets/loading_indicator.dart';
@@ -68,7 +72,7 @@ class MessageDetailPage extends ConsumerWidget {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red, // czerwony przycisk
+                        backgroundColor: Colors.red,
                       ),
                       onPressed: () => Navigator.pop(context, true),
                       child: Text("Tak", style: TextStyle(color: textColor)),
@@ -189,21 +193,45 @@ class MessageDetailPage extends ConsumerWidget {
                       if (message.hasAttachments) ...[
                         const SizedBox(height: 20),
                         Tooltip(
-                          message: "Naciśnij, aby wyświetlić",
-                          child: Row(
-                            children: const [
-                              Icon(Icons.attachment),
-                              SizedBox(width: 8),
-                              Text("Wiadomość zawiera załączniki"),
-                            ],
+                          message: "Naciśnij, aby pobrać załącznik",
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: message.attachments.map<Widget>((
+                              attachment,
+                            ) {
+                              return TextButton.icon(
+                                icon: const Icon(Icons.attach_file),
+                                label: Text(attachment.name, maxLines: 1),
+                                onPressed: () async {
+                                  try {
+                                    final bytes = await messageRepo
+                                        .downloadAttachment(
+                                          attachment.downloadUrl,
+                                        );
+
+                                    final dir = await getTemporaryDirectory();
+                                    final filePath =
+                                        "${dir.path}/${attachment.name}";
+                                    final file = File(filePath);
+                                    await file.writeAsBytes(bytes);
+
+                                    await OpenFilex.open(filePath);
+                                  } catch (e) {
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Błąd pobierania: $e"),
+                                      ),
+                                    );
+                                  }
+                                },
+                              );
+                            }).toList(),
                           ),
                         ),
                       ],
-                      // Data otrzymania
                       const SizedBox(height: 10),
                       Text("Wysłano: $sentTime"),
-
-                      // Data przechowywania wiadomości
                       Tooltip(
                         message: "Po tym czasie, wiadomość zostanie usunięta",
                         child: Row(

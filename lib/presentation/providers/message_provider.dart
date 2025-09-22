@@ -39,3 +39,11 @@ final deleteMessageProvider = FutureProvider.family<bool, String>((
   final repo = ref.read(messageRepositoryProvider);
   return repo.deleteMessage(id);
 });
+
+final downloadAttachmentProvider = FutureProvider.family<List<int>, String>((
+  ref,
+  url,
+) async {
+  final repo = ref.read(messageRepositoryProvider);
+  return repo.downloadAttachment(url);
+});
