@@ -26,3 +26,16 @@ build_runner: Generate files tagged as @freezed
 
 and some others...
 
+
+Some photos of application:
+
+<img width="1080" height="2424" alt="flutter_07" src="https://github.com/user-attachments/assets/7512ecff-b431-4f3a-8a4e-77e7c9fa5014" />
+<img width="1080" height="2424" alt="flutter_06" src="https://github.com/user-attachments/assets/0e4c198c-e2b4-460f-bcda-5b16e7c3e7c6" />
+<img width="1080" height="2424" alt="flutter_05" src="https://github.com/user-attachments/assets/22b4df01-f63d-4636-a8db-d1cada3cb69c" />
+<img width="1080" height="2424" alt="flutter_04" src="https://github.com/user-attachments/assets/3c3f2c05-8b18-4416-b422-df03be0c8f82" />
+<img width="1080" height="2424" alt="flutter_03" src="https://github.com/user-attachments/assets/b6a8cf24-467c-4f67-9924-3f378962e24a" />
+<img width="1080" height="2424" alt="flutter_02" src="https://github.com/user-attachments/assets/c1115a73-d274-4832-b467-a5031bfee0d4" />
+<img width="1080" height="2424" alt="flutter_01" src="https://github.com/user-attachments/assets/eb181e55-ddeb-4ca5-9c08-be19a33f0ed4" />
+<img width="1080" height="2424" alt="flutter_08" src="https://github.com/user-attachments/assets/d8469810-92c9-49e9-9a5e-77acdf4332d9" />
+<img width="1080" height="2424" alt="image" src="https://github.com/user-attachments/assets/7b524324-3f9d-432e-8880-b49901c6de9b" />
+
