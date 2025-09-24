@@ -102,9 +102,19 @@ class MailboxPage extends ConsumerWidget {
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
+                            child: Row(
+                              children: [
+                                const Icon(Icons.delete, color: Colors.white),
+                                const SizedBox(width: 5),
+                                Text(
+                                  "Usuń wiadomość",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           child: Card(
