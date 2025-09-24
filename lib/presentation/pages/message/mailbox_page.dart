@@ -85,82 +85,105 @@ class MailboxPage extends ConsumerWidget {
                         onTap: () {
                           context.go("/messageDetails/${message.id}");
                         },
-                        child: Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 16,
+                        child: Dismissible(
+                          key: ValueKey(message.id),
+                          direction:
+                              DismissDirection.startToEnd, // tylko w prawo
+                          onDismissed: (direction) async {
+                            await ref
+                                .read(messageRepositoryProvider)
+                                .deleteMessage(message.id);
+                            // ignore: unused_result
+                          },
+                          background: Container(
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.only(left: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                  radius: 24,
-                                  backgroundColor: message.seen
-                                      ? Colors.grey[300]
-                                      : AppPalette.primary.main,
-                                  child: Text(
-                                    fromName.isNotEmpty
-                                        ? fromName[0].toUpperCase()
-                                        : "?",
-                                    style: TextStyle(
-                                      color: message.seen
-                                          ? Colors.black54
-                                          : Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 24,
+                                    backgroundColor: message.seen
+                                        ? Colors.grey[300]
+                                        : AppPalette.primary.main,
+                                    child: Text(
+                                      fromName.isNotEmpty
+                                          ? fromName[0].toUpperCase()
+                                          : "?",
+                                      style: TextStyle(
+                                        color: message.seen
+                                            ? Colors.black54
+                                            : Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        fromName,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                          color: primaryTextColor,
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          fromName,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                            color: primaryTextColor,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        message.subject.isNotEmpty
-                                            ? message.subject
-                                            : "(Brak tematu)",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: primaryTextColor,
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          message.subject.isNotEmpty
+                                              ? message.subject
+                                              : "(Brak tematu)",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: primaryTextColor,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        message.intro.isNotEmpty
-                                            ? message.intro
-                                            : message.text,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: secondaryTextColor,
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          message.intro.isNotEmpty
+                                              ? message.intro
+                                              : message.text,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: secondaryTextColor,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                if (message.hasAttachments)
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Icon(Icons.attachment, size: 20),
-                                  ),
-                              ],
+                                  if (message.hasAttachments)
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 8),
+                                      child: Icon(Icons.attachment, size: 20),
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
